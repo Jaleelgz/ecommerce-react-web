@@ -104,3 +104,34 @@ export const Products = [
     stock: "150",
   },
 ];
+
+export const ClassifiedProducts = [
+  {
+    name: "Holy Stone HS470 Foldable GPS RC Drone",
+    location: "Cape Hadstone",
+    image: "/images/classified/drone.png",
+    isUrgent: true,
+    price: "300.98",
+  },
+  {
+    name: "Marshall Stockwell II Portable Speaker",
+    location: "Cape Hadstone",
+    image: "/images/classified/radio.png",
+    isUrgent: true,
+    price: "300.98",
+  },
+  {
+    name: "2020 Ford Mustang GT Fastback",
+    location: "Cape Hadstone",
+    image: "/images/classified/car.png",
+    isUrgent: true,
+    price: "22,822",
+  },
+  {
+    name: "Iphone 11 pro max",
+    location: "Cape Hadstone",
+    image: "/images/classified/phone.png",
+    isUrgent: true,
+    price: "76.87",
+  },
+];
