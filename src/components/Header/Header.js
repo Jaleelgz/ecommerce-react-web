@@ -17,6 +17,7 @@ import {
   Call,
   FavoriteBorder,
   LocationOn,
+  Login,
   Mail,
   Search,
   ShoppingCartOutlined,
@@ -27,8 +28,14 @@ import { Fonts } from "../../constants/fonts/fonts";
 import { HeaderStyles } from "./HeaderStyles";
 import { Images } from "../../constants/images/images";
 import { HeaderCategories } from "../../constants/constants";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user.value);
+  const cart = useSelector((state) => state.cart.value);
+
   return (
     <Box>
       {/* Blue Header */}
@@ -225,28 +232,43 @@ const Header = () => {
               />
             </Box>
 
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "15px",
-              }}
-            >
-              <IconButton>
-                <FavoriteBorder fontSize="20px" />
-              </IconButton>
+            {!user.id ? (
+              <Button
+                onClick={() => navigate("/login")}
+                startIcon={<Login />}
+                variant="outlined"
+                sx={{
+                  whiteSpace: "nowrap",
+                  flexWrap: "nowrap",
+                  minWidth: "100px",
+                }}
+              >
+                Sign in
+              </Button>
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "15px",
+                }}
+              >
+                <IconButton>
+                  <FavoriteBorder fontSize="20px" />
+                </IconButton>
 
-              <IconButton>
-                <Badge badgeContent={4} color="primary">
-                  <ShoppingCartOutlined fontSize="20px" />
-                </Badge>
-              </IconButton>
+                <IconButton>
+                  <Badge badgeContent={cart.length} color="primary">
+                    <ShoppingCartOutlined fontSize="20px" />
+                  </Badge>
+                </IconButton>
 
-              <IconButton>
-                <AccountCircle fontSize="20px" />
-              </IconButton>
-            </Box>
+                <IconButton>
+                  <AccountCircle fontSize="20px" />
+                </IconButton>
+              </Box>
+            )}
 
             <Box
               sx={{

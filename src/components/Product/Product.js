@@ -5,8 +5,19 @@ import { Fonts } from "../../constants/fonts/fonts";
 import { colors } from "../../constants/colors/colors";
 import { globalStyles } from "../../utils/globalStyles";
 import { ShoppingCart, Star } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addProductToCart,
+  removeProductFromCart,
+} from "../../store/slices/ProductsSlice";
+import { addToCart, removeFromCart } from "../../store/slices/CartSlice";
+import { showToast } from "../../store/slices/ToastSlice";
+import { ToastModes } from "../../enum/ToastModes";
 
 const Product = ({ product }) => {
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.value);
+
   return (
     <Box
       sx={{
@@ -84,20 +95,43 @@ const Product = ({ product }) => {
             mt: "5px",
           }}
         >
-          {true ? (
+          {cart.find((cartItem) => cartItem.name === product.name) ? (
             <React.Fragment>
               <Button
                 sx={{ width: "10px", minWidth: "10px" }}
                 variant="outlined"
+                onClick={() => {
+                  dispatch(removeFromCart(product));
+                  dispatch(removeProductFromCart(product));
+                  dispatch(
+                    showToast({ mode: ToastModes.success, text: "Success" })
+                  );
+                }}
               >
                 -
               </Button>
-              <Typography sx={{ width: "20px", textAlign: "center" }}>
-                {5}
+
+              <Typography sx={{ width: "30px", textAlign: "center" }}>
+                {
+                  cart.find((cartItem) => cartItem.name === product.name)
+                    ?.quantity
+                }
               </Typography>
+
               <Button
                 sx={{ width: "10px", minWidth: "10px" }}
                 variant="outlined"
+                disabled={product.stock === "0"}
+                onClick={() => {
+                  dispatch(addProductToCart(product));
+                  dispatch(addToCart(product));
+                  dispatch(
+                    showToast({
+                      mode: ToastModes.success,
+                      text: "Added one more to cart",
+                    })
+                  );
+                }}
               >
                 +
               </Button>
@@ -107,6 +141,14 @@ const Product = ({ product }) => {
               startIcon={<ShoppingCart />}
               sx={{ textTransform: "none" }}
               variant="contained"
+              disabled={product.stock === "0"}
+              onClick={() => {
+                dispatch(addProductToCart(product));
+                dispatch(addToCart(product));
+                dispatch(
+                  showToast({ mode: ToastModes.success, text: "Added to cart" })
+                );
+              }}
             >
               Add to cart
             </Button>

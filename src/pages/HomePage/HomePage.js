@@ -11,21 +11,19 @@ import React from "react";
 import HomeBanner from "../../components/HomeBanner/HomeBanner";
 import { globalStyles } from "../../utils/globalStyles";
 import { HomePageStyles } from "./HomePageStyles";
-import { ClassifiedProducts, Products } from "../../constants/constants";
+import { ClassifiedProducts } from "../../constants/constants";
 import Product from "../../components/Product/Product";
-import {
-  ArrowLeft,
-  ArrowRight,
-  KeyboardArrowLeft,
-  KeyboardArrowRight,
-} from "@mui/icons-material";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { getFontSize } from "../../utils/responsiveFontSize";
 import { Fonts } from "../../constants/fonts/fonts";
 import { colors } from "../../constants/colors/colors";
 import ClassifiedProduct from "../../components/ClassifiedProduct/ClassifiedProduct";
 import { Images } from "../../constants/images/images";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
+  const products = useSelector((state) => state.products.value);
+
   return (
     <Box>
       {/* Banner */}
@@ -48,7 +46,7 @@ const HomePage = () => {
         </Box>
 
         <Grid container rowSpacing={{ xs: 2, sm: 4, md: 7 }} columnSpacing={5}>
-          {Products.map((product) => (
+          {products.map((product) => (
             <Grid key={product.name} item xs={12} md={6} lg={3} xl={2.4}>
               <Product product={product} />
             </Grid>
