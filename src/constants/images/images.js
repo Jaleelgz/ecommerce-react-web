@@ -1,1 +1,3 @@
-export const Images = {};
+export const Images = {
+  LOGO: "/images/ecomLogo.png",
+};
