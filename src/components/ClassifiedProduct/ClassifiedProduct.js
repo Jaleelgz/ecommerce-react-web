@@ -14,9 +14,30 @@ const ClassifiedProduct = ({ product }) => {
         width: getFontSize(328),
         background: "#FFFFFF",
         boxShadow: "0px 9px 26px rgba(0, 0, 0, 0.06)",
-        borderRadius: "30px",
+        borderRadius: "20px",
+        position: "relative",
       }}
     >
+      {product.isUrgent && (
+        <Box
+          sx={{
+            background: "#00C6D7",
+            borderRadius: "25px 0px 0px 25px",
+            fontFamily: Fonts.POPPINS_BOLD,
+            fontStyle: "normal",
+            fontWeight: "600",
+            fontSize: "16px",
+            lineHeight: "24px",
+            color: colors.MAIN_WHITE,
+            position: "absolute",
+            right: 0,
+            top: "15px",
+            padding: "5px",
+          }}
+        >
+          Urgent Selling
+        </Box>
+      )}
       <img
         src={product.image}
         alt={product.name}
@@ -24,7 +45,7 @@ const ClassifiedProduct = ({ product }) => {
           width: "100%",
           height: getFontSize(314),
           objectFit: "cover",
-          borderRadius: "30px",
+          borderRadius: "20px",
         }}
       />
       <Box sx={{ padding: "15px 20px" }}>

@@ -185,6 +185,7 @@ const Footer = () => {
                   fontSize: getFontSize(12),
                   lineHeight: "24px",
                   color: colors.MAIN_WHITE,
+                  whiteSpace:'nowrap'
                 }}
               >
                 Download now on
@@ -197,6 +198,7 @@ const Footer = () => {
                   fontSize: getFontSize(20),
                   lineHeight: "24px",
                   color: colors.MAIN_WHITE,
+                  whiteSpace:'nowrap'
                 }}
               >
                 App Store
@@ -225,6 +227,7 @@ const Footer = () => {
                   fontSize: getFontSize(12),
                   lineHeight: "24px",
                   color: colors.MAIN_WHITE,
+                  whiteSpace:'nowrap'
                 }}
               >
                 GET IT ON
@@ -237,6 +240,7 @@ const Footer = () => {
                   fontSize: getFontSize(20),
                   lineHeight: "24px",
                   color: colors.MAIN_WHITE,
+                  whiteSpace:'nowrap'
                 }}
               >
                 Google Play

@@ -117,7 +117,7 @@ export const ClassifiedProducts = [
     name: "Marshall Stockwell II Portable Speaker",
     location: "Cape Hadstone",
     image: "/images/classified/radio.png",
-    isUrgent: true,
+    isUrgent: false,
     price: "300.98",
   },
   {
@@ -131,7 +131,7 @@ export const ClassifiedProducts = [
     name: "Iphone 11 pro max",
     location: "Cape Hadstone",
     image: "/images/classified/phone.png",
-    isUrgent: true,
+    isUrgent: false,
     price: "76.87",
   },
 ];
