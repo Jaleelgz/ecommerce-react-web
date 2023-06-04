@@ -1,8 +1,6 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import Button from "@mui/material/Button";
 import { Box, CardMedia, Typography } from "@mui/material";
-import { postData } from "../../utils/restUtils";
-import { setUserToLocalStorage, signOutUser } from "../../utils/authServices";
 import SigninNSignupContainer from "../../components/SigninNSignUpContainer/SigninNSignupContainer";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -14,56 +12,16 @@ import { RecaptchaVerifier, signInWithPopup } from "firebase/auth";
 import { globalStyles } from "../../utils/globalStyles";
 import { auth, googleProvider } from "../../utils/firebaseConfig";
 import { useEffect } from "react";
-import Loader from "../../common/Loader/Loader";
 import { Images } from "../../constants/images/images";
 
-export function LoginPage() {
+export function SignupPage() {
   const { width } = useWindowDimensions();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     localStorage.clear();
   }, []);
-
-  const signIn = async ({ accessToken, uid }) => {
-    setLoading(true);
-    const signInRes = await postData("user/sign_in", undefined, accessToken);
-
-    if (!signInRes) {
-      dispatch(
-        showToast({
-          mode: ToastModes.error,
-          text: "Failed to sign in.Try again!",
-        })
-      );
-      signOutUser();
-      setLoading(false);
-      return;
-    }
-
-    if (signInRes.status) {
-      dispatch(showToast({ mode: ToastModes.error, text: signInRes.message }));
-      setError({
-        isError: true,
-        message: signInRes.message
-          ? signInRes.message
-          : "Failed to login.Try again!",
-      });
-      signOutUser();
-      setLoading(false);
-      return;
-    }
-
-    setUserToLocalStorage(signInRes);
-    setError("");
-
-    setLoading(false);
-    window?.history?.replaceState(null, null, "/");
-    window?.location?.reload();
-  };
 
   useEffect(() => {
     generateRecaptcha();
@@ -80,7 +38,7 @@ export function LoginPage() {
     );
   };
 
-  const signInWithGoogle = async () => {
+  const signUpWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
 
@@ -94,17 +52,18 @@ export function LoginPage() {
         return;
       }
 
-      localStorage.setItem(
-        "firebase_result",
-        JSON.stringify({
-          accessToken: result.user?.accessToken,
-          uid: result.user?.uid,
-        })
-      );
+      localStorage.setItem("firebase_result", JSON.stringify(result));
 
-      signIn({
-        accessToken: result.user?.accessToken,
-        uid: result.user?.uid,
+      navigate("register", {
+        state: {
+          user: {
+            accessToken: result?.user?.accessToken,
+            name: result?.user?.displayName,
+            email: result?.user?.email,
+            phone: result?.user?.phoneNumber ? result?.user?.phoneNumber : "",
+            image: result?.user?.photoURL ? result?.user?.photoURL : undefined,
+          },
+        },
       });
     } catch (error) {
       dispatch(
@@ -121,8 +80,6 @@ export function LoginPage() {
   return (
     <>
       <SigninNSignupContainer>
-        {loading && <Loader />}
-
         <Box sx={{ display: { md: "block", xs: "none" } }} className="bg">
           <Box className="welcomeContainer">
             <Box className="welcomeInnerContainer">
@@ -134,9 +91,10 @@ export function LoginPage() {
                 sx={{ objectFit: "contain", maxHeight: 40, width: "auto" }}
               />
             </Box>
-            <Typography className="subTxt">Sign in with Google</Typography>
+            <Typography className="subTxt">Sign up with Google</Typography>
           </Box>
         </Box>
+
         <Box className={width < 900 ? "right rightbg" : "right"}>
           <Box className="innerContainer">
             <Typography
@@ -145,7 +103,7 @@ export function LoginPage() {
                 fontSize: 30,
               }}
             >
-              Sign in
+              Sign up
             </Typography>
 
             <div id="recaptachContainer" />
@@ -162,7 +120,7 @@ export function LoginPage() {
               }}
             >
               <Button
-                onClick={signInWithGoogle}
+                onClick={signUpWithGoogle}
                 variant="outlined"
                 size="large"
                 startIcon={<FcGoogle size={25} />}
@@ -178,7 +136,7 @@ export function LoginPage() {
               </Button>
 
               <Button
-                href="/signup"
+                href="/login"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -198,7 +156,7 @@ export function LoginPage() {
                     ...globalStyles.textCenter,
                   }}
                 >
-                  Don't have an account ?{" "}
+                  Already have an account ?{" "}
                 </Typography>
                 <Typography
                   style={{
@@ -208,7 +166,7 @@ export function LoginPage() {
                     color: "#703EF0",
                   }}
                 >
-                  Sign up
+                  Sign in
                 </Typography>
               </Button>
             </Box>
@@ -219,4 +177,4 @@ export function LoginPage() {
   );
 }
 
-export default memo(LoginPage);
+export default memo(SignupPage);

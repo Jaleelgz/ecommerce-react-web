@@ -5,7 +5,7 @@ function PrivateRoute() {
   const location = useLocation();
 
   const user = getUser();
-  const isLoggedIn = user && user.accessToken ? true : false;
+  const isLoggedIn = user && user.userToken ? true : false;
   const loginPath = "/login";
 
   return (

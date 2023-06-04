@@ -5,11 +5,13 @@ import {
   Divider,
   IconButton,
   InputAdornment,
+  Menu,
   MenuItem,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { colors } from "../../constants/colors/colors";
 import {
   AccountCircle,
@@ -18,6 +20,7 @@ import {
   FavoriteBorder,
   LocationOn,
   Login,
+  Logout,
   Mail,
   Search,
   ShoppingCartOutlined,
@@ -28,13 +31,34 @@ import { Fonts } from "../../constants/fonts/fonts";
 import { HeaderStyles } from "./HeaderStyles";
 import { Images } from "../../constants/images/images";
 import { HeaderCategories } from "../../constants/constants";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { signOutUser } from "../../utils/authServices";
+import { clearUser } from "../../store/slices/UserSlice";
+import { showToast } from "../../store/slices/ToastSlice";
+import { ToastModes } from "../../enum/ToastModes";
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [anchorElUser, setAnchorElUser] = useState(null);
   const user = useSelector((state) => state.user.value);
   const cart = useSelector((state) => state.cart.value);
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const onLogout = () => {
+    signOutUser();
+    dispatch(clearUser());
+    handleCloseUserMenu();
+    dispatch(showToast({ mode: ToastModes.success, text: "Sign out!" }));
+  };
 
   return (
     <Box>
@@ -232,7 +256,7 @@ const Header = () => {
               />
             </Box>
 
-            {!user.id ? (
+            {!user.userId ? (
               <Button
                 onClick={() => navigate("/login")}
                 startIcon={<Login />}
@@ -258,17 +282,47 @@ const Header = () => {
                   <FavoriteBorder fontSize="20px" />
                 </IconButton>
 
-                <IconButton>
+                <IconButton onClick={() => navigate("/cart")}>
                   <Badge badgeContent={cart.length} color="primary">
                     <ShoppingCartOutlined fontSize="20px" />
                   </Badge>
                 </IconButton>
 
-                <IconButton>
-                  <AccountCircle fontSize="20px" />
-                </IconButton>
+                <Tooltip title={user.name}>
+                  <IconButton onClick={handleOpenUserMenu}>
+                    <AccountCircle fontSize="20px" />
+                  </IconButton>
+                </Tooltip>
               </Box>
             )}
+
+            <Menu
+              sx={{ mt: "45px", width: "200px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              <MenuItem sx={{ width: "200px" }} onClick={onLogout}>
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
+                  <Logout />
+                  <Typography sx={{ flexGrow: 1 }} textAlign="center">
+                    Logout
+                  </Typography>
+                </Box>
+              </MenuItem>
+            </Menu>
 
             <Box
               sx={{
@@ -315,7 +369,6 @@ const Header = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "5px",
-                //   ml: "15px",
               }}
             >
               <Typography sx={HeaderStyles.headerCategoryTxt}>

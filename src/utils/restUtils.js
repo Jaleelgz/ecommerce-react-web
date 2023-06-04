@@ -39,7 +39,7 @@ export async function getData(url) {
   }
 }
 
-export async function postData(url, data, timeout) {
+export async function postData(url, data, accessToken) {
   let responseData;
   let response = null;
   try {
@@ -47,10 +47,12 @@ export async function postData(url, data, timeout) {
       `${process.env.REACT_APP_BASE_URL}${url}`,
       data,
       {
-        headers: getToken(),
-        timeout: parseInt(
-          timeout ? timeout : process.env.REACT_APP_AXIOS_API_TIMEOUT
-        ),
+        headers: accessToken
+          ? {
+              Authorization: `Bearer ${accessToken}`,
+            }
+          : getToken(),
+        timeout: parseInt(process.env.REACT_APP_AXIOS_API_TIMEOUT),
       }
     );
 

@@ -3,7 +3,7 @@ import "./App.css";
 import { Box, ThemeProvider } from "@mui/material";
 import { theme } from "./utils/theme";
 import Toast from "./common/Toast/Toast";
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./common/PrivateRoute/PrivateRoute";
 import Layout from "./components/Layout/Layout";
 import HomePage from "./pages/HomePage/HomePage";
@@ -13,6 +13,8 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { useEffect } from "react";
 import { getUser } from "./utils/authServices";
 import { setUser } from "./store/slices/UserSlice";
+import { SignupPage } from "./pages/SignupPage/SignupPage";
+import RegisterPage from "./pages/RegisterPage/RegisterPage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -43,6 +45,10 @@ const App = () => {
           </Route>
 
           <Route exact path="/login" element={<LoginPage />} />
+          <Route exact path="/signup" element={<Outlet />}>
+            <Route exact index element={<SignupPage />} />
+            <Route exact path="register" element={<RegisterPage />} />
+          </Route>
           <Route exact path="/" element={<Layout />}>
             <Route exact index element={<HomePage />} />
           </Route>
