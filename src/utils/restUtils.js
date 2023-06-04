@@ -3,14 +3,14 @@ import * as authservice from "./authServices";
 
 const getToken = () => {
   if (authservice.isLoggedIn()) {
-    const { accessToken } = authservice.getUser();
+    const { userToken } = authservice.getUser();
 
-    if (!accessToken) {
+    if (!userToken) {
       return;
     }
 
     return {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${userToken}`,
     };
   } else {
     return;

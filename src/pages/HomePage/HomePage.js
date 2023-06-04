@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HomeBanner from "../../components/HomeBanner/HomeBanner";
 import { globalStyles } from "../../utils/globalStyles";
 import { HomePageStyles } from "./HomePageStyles";
@@ -19,19 +19,80 @@ import { Fonts } from "../../constants/fonts/fonts";
 import { colors } from "../../constants/colors/colors";
 import ClassifiedProduct from "../../components/ClassifiedProduct/ClassifiedProduct";
 import { Images } from "../../constants/images/images";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getData } from "../../utils/restUtils";
+import { showToast } from "../../store/slices/ToastSlice";
+import { ToastModes } from "../../enum/ToastModes";
+import { setProducts } from "../../store/slices/ProductsSlice";
+import { setCart } from "../../store/slices/CartSlice";
+import Loader from "../../common/Loader/Loader";
 
 const HomePage = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
   const products = useSelector((state) => state.products.value);
+  const [loading, setLoading] = useState(false);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+
+    const productRes = await getData("product/all");
+
+    if (!productRes || productRes?.sttus || productRes.statusCode) {
+      dispatch(
+        showToast({
+          mode: ToastModes.error,
+          text: productRes?.message
+            ? productRes?.message
+            : "Failed to fetch products.Try again!",
+        })
+      );
+      setLoading(false);
+      return;
+    }
+
+    dispatch(setProducts(productRes));
+    setLoading(false);
+  };
+
+  const fetchCart = async () => {
+    setLoading(true);
+
+    const cartRes = await getData("cart/all");
+
+    if (!cartRes || cartRes?.status || cartRes.statusCode) {
+      dispatch(
+        showToast({
+          mode: ToastModes.error,
+          text: cartRes?.message
+            ? cartRes?.message
+            : "Failed to fetch cart.Try again!",
+        })
+      );
+      setLoading(false);
+      return;
+    }
+
+    dispatch(setCart(cartRes));
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchProducts();
+
+    if (user && user?.userToken) {
+      fetchCart();
+    }
+  }, [user]);
 
   return (
     <Box>
-      {/* Banner */}
+      {loading && <Loader />}
 
+      {/* Banner */}
       <HomeBanner />
 
       {/* Products */}
-
       <Box sx={{ ...globalStyles.maxWidthContainer, my: "40px" }}>
         <Box
           sx={{

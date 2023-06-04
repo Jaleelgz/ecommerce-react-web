@@ -14,7 +14,7 @@ export const ProductsSlice = createSlice({
     },
     addProductToCart: (state, action) => {
       const updatedProducts = state.value.map((product) => {
-        if (product.name === action.payload?.name) {
+        if (product.id === action.payload?.id) {
           return { ...product, stock: Number(product.stock) - 1 };
         } else {
           return product;
@@ -24,7 +24,7 @@ export const ProductsSlice = createSlice({
     },
     removeProductFromCart: (state, action) => {
       const updatedProducts = state.value.map((product) => {
-        if (product.name === action.payload?.name) {
+        if (product.id === action.payload?.id) {
           return { ...product, stock: Number(product.stock) + 1 };
         } else {
           return product;

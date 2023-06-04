@@ -18,6 +18,7 @@ import {
   ArrowDropDown,
   Call,
   FavoriteBorder,
+  Home,
   LocationOn,
   Login,
   Logout,
@@ -37,6 +38,7 @@ import { signOutUser } from "../../utils/authServices";
 import { clearUser } from "../../store/slices/UserSlice";
 import { showToast } from "../../store/slices/ToastSlice";
 import { ToastModes } from "../../enum/ToastModes";
+import { clearAllCart } from "../../store/slices/CartSlice";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -56,6 +58,7 @@ const Header = () => {
   const onLogout = () => {
     signOutUser();
     dispatch(clearUser());
+    dispatch(clearAllCart());
     handleCloseUserMenu();
     dispatch(showToast({ mode: ToastModes.success, text: "Sign out!" }));
   };
@@ -217,6 +220,7 @@ const Header = () => {
                 }}
                 src={Images.LOGO}
                 alt="logo"
+                onClick={() => navigate("/")}
               />
 
               <TextField
@@ -278,15 +282,23 @@ const Header = () => {
                   gap: "15px",
                 }}
               >
+                <Tooltip title={"Home"}>
+                  <IconButton onClick={() => navigate("/")}>
+                    <Home fontSize="20px" />
+                  </IconButton>
+                </Tooltip>
+
                 <IconButton>
                   <FavoriteBorder fontSize="20px" />
                 </IconButton>
 
-                <IconButton onClick={() => navigate("/cart")}>
-                  <Badge badgeContent={cart.length} color="primary">
-                    <ShoppingCartOutlined fontSize="20px" />
-                  </Badge>
-                </IconButton>
+                <Tooltip title={"Cart"}>
+                  <IconButton onClick={() => navigate("/cart")}>
+                    <Badge badgeContent={cart.length} color="primary">
+                      <ShoppingCartOutlined fontSize="20px" />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
 
                 <Tooltip title={user.name}>
                   <IconButton onClick={handleOpenUserMenu}>

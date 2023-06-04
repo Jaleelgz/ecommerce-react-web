@@ -13,12 +13,12 @@ export const CartSlice = createSlice({
     },
     addToCart: (state, action) => {
       const isProductExisting = state.value?.find(
-        (cartItem) => cartItem.name === action.payload?.name
+        (cartItem) => cartItem.id === action.payload?.id
       );
 
       if (isProductExisting) {
         const updatedProducts = state.value.map((product) => {
-          if (product.name === action.payload?.name) {
+          if (product.id === action.payload?.id) {
             return {
               ...product,
               quantity: Number(product.quantity) + 1,
@@ -37,16 +37,16 @@ export const CartSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       const isProductExisting = state.value?.find(
-        (cartItem) => cartItem.name === action.payload?.name
+        (cartItem) => cartItem.id === action.payload?.id
       );
 
       if (Number(isProductExisting.quantity) <= 1) {
         state.value = state.value?.filter(
-          (cartItem) => cartItem.name !== isProductExisting.name
+          (cartItem) => cartItem.id !== isProductExisting.id
         );
       } else {
         const updatedProducts = state.value.map((product) => {
-          if (product.name === isProductExisting?.name) {
+          if (product.id === isProductExisting?.id) {
             return {
               ...product,
               quantity: Number(product.quantity) - 1,
