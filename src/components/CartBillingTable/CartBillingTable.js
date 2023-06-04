@@ -13,9 +13,9 @@ export default function CartBillingTable() {
   const cart = useSelector((state) => state.cart.value);
 
   return (
-    <Paper sx={{mt:10}}>
+    <Paper sx={{ mt: 10 }}>
       <TableContainer component={Box}>
-        <Table sx={{ minWidth: 350 }} aria-label="simple table">
+        <Table sx={{ minWidth: 550 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: "600" }}>Name</TableCell>
